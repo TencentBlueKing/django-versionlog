@@ -1,0 +1,8 @@
+include LICENSE
+include README.md
+include MANIFEST.in
+recursive-include version_log/static *
+recursive-include version_log/templates *
+recursive-include docs *
+global-exclude __pycache__
+global-exclude *.py[co]
