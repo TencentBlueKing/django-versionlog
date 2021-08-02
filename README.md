@@ -1,6 +1,6 @@
 # django-versionlog
 
-![django-versionlog](docs/img/icons/django-versionlog.png)
+![](docs/img/icons/django-versionlog.png)
 
 [![license](https://img.shields.io/badge/license-mit-brightgreen.svg?style=flat)](https://github.com/TencentBlueKing/django-versionlog/blob/master/LICENSE) [![Release Version](https://img.shields.io/github/v/release/TencentBlueKing/django-versionlog)](https://github.com/TencentBlueKing/django-versionlog/releases) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/django-versionlog/pulls) 
 
@@ -82,7 +82,7 @@ django-versionlog是为网站开发者提供版本日志快速接入的功能模
   社区版QQ交流群：495299374
   
   蓝鲸运维开发交流群：878501914
-  ![bk_qr_code](docs/img/icons/qr_code.png)
+  ![](docs/img/icons/qr_code.png)
   
 ## Contributing
 
