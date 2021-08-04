@@ -12,11 +12,9 @@ specific language governing permissions and limitations under the License.
 """
 
 from django.conf.urls import url
-from django.views.i18n import JavaScriptCatalog
 
 from version_log import views
 
-app_name = 'version_log'
 
 urlpatterns = (
     # 版本日志单页面
@@ -27,5 +25,4 @@ urlpatterns = (
     url(r'^version_logs_list/$', views.version_logs_list, name='version_logs_list'),
     # 获取版本日志详情
     url(r'^version_log_detail/', views.get_version_log_detail, name='version_log_detail'),
-    url(r'^jsi18n/$', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 )
