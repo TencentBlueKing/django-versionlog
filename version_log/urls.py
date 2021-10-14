@@ -15,6 +15,7 @@ from django.conf.urls import url
 
 from version_log import views
 
+app_name = "version_log"
 
 urlpatterns = (
     # 版本日志单页面
