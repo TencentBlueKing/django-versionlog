@@ -29,6 +29,7 @@ setup(
     url="https://github.com/TencentBlueKing/django-versionlog",
     description='version log module',
     long_description=README,
+    long_description_content_type='text/markdown',
     author='blueking',
     author_email='blueking@tencent.com',
     install_requires=[
