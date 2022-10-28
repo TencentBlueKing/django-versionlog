@@ -12,59 +12,119 @@ specific language governing permissions and limitations under the License.
 """
 
 import logging
+import functools
 
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.utils.translation import ugettext_lazy as _
 
 from version_log import config
+from version_log.models import VersionLogVisited
 from version_log.utils import get_version_list, get_parsed_html
 
 logger = logging.getLogger(__name__)
+
+
+def latest_read_record(view_func):
+    @functools.wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        visit_log_version = request.GET.get("log_version") or request.POST.get(
+            "log_version"
+        )
+        if config.LATEST_VERSION_INFORM and visit_log_version == config.LATEST_VERSION:
+            VersionLogVisited.objects.update_visit_version(
+                request.user.username, visit_log_version
+            )
+
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
 
 
 def version_logs_page(request):
     """版本日志页面"""
     version_list = get_version_list()
     if version_list is None:
-        logger.error('MD_FILES_DIR not found. Current path is {}'.format(config.MD_FILES_DIR))
+        logger.error(
+            "MD_FILES_DIR not found. Current path is {}".format(config.MD_FILES_DIR)
+        )
         version_list = []  # 用无日志文件提示对用户屏蔽错误
     else:
-        version_list = [{'version': version, 'date': date} for (version, date) in version_list]
+        version_list = [
+            {"version": version, "date": date} for (version, date) in version_list
+        ]
     context = {
-        'version_list': version_list,
-        'page_title': config.PAGE_HEAD_TITLE,
-        'ENTRANCE_URL': config.ENTRANCE_URL,
-        'USE_HASH_URL': config.USE_HASH_URL
+        "version_list": version_list,
+        "page_title": config.PAGE_HEAD_TITLE,
+        "ENTRANCE_URL": config.ENTRANCE_URL,
+        "USE_HASH_URL": config.USE_HASH_URL,
     }
-    if config.PAGE_STYLE == 'dialog':
-        return render(request, 'version_log/version_logs_dialog_page.html', context)
+    if config.PAGE_STYLE == "dialog":
+        return render(request, "version_log/version_logs_dialog_page.html", context)
     else:
-        return render(request, 'version_log/version_logs_page.html', context)
+        return render(request, "version_log/version_logs_page.html", context)
 
 
 def version_logs_block(request):
     """版本日志数据块"""
-    return render(request, 'version_log/version_logs_block.html')
+    return render(request, "version_log/version_logs_block.html")
 
 
 def version_logs_list(request):
     """获取版本日志列表"""
     version_list = get_version_list()
     if version_list is None:
-        logger.error('MD_FILES_DIR not found. Current path is {}'.format(config.MD_FILES_DIR))
-        return JsonResponse({'result': False, 'code': -1, 'message': _(u'访问出错，请联系管理员。'), 'data': None})
-    response = {'result': True, 'code': 0, 'message': _(u'日志列表获取成功'), 'data': version_list}
+        logger.error(
+            "MD_FILES_DIR not found. Current path is {}".format(config.MD_FILES_DIR)
+        )
+        return JsonResponse(
+            {"result": False, "code": -1, "message": _("访问出错，请联系管理员。"), "data": None}
+        )
+    response = {
+        "result": True,
+        "code": 0,
+        "message": _("日志列表获取成功"),
+        "data": version_list,
+    }
     return JsonResponse(response)
 
 
+@latest_read_record
 def get_version_log_detail(request):
     """获取单条版本日志转换结果"""
-    log_version = request.GET.get('log_version')
+    log_version = request.GET.get("log_version")
     html_text = get_parsed_html(log_version)
     if html_text is None:
-        logger.error('md file not found or log version not valid. Log version is {}'.format(log_version))
-        response = {'result': False, 'code': -1, 'message': _(u'日志版本文件没找到，请联系管理员'), 'data': None}
+        logger.error(
+            "md file not found or log version not valid. Log version is {}".format(
+                log_version
+            )
+        )
+        response = {
+            "result": False,
+            "code": -1,
+            "message": _("日志版本文件没找到，请联系管理员"),
+            "data": None,
+        }
         return JsonResponse(response)
-    response = {'result': True, 'code': 0, 'message': _(u'日志详情获取成功'), 'data': html_text}
+    response = {"result": True, "code": 0, "message": _("日志详情获取成功"), "data": html_text}
     return JsonResponse(response)
+
+
+def has_user_read_latest(request):
+    """查询当前用户是否看过最新版本日志"""
+    username = request.user.username
+    has_latest_read = VersionLogVisited.objects.has_visit_latest(
+        username, config.LATEST_VERSION
+    )
+    return JsonResponse(
+        {
+            "result": True,
+            "code": 0,
+            "message": "",
+            "data": {
+                "latest_version": config.LATEST_VERSION,
+                "has_read_latest": has_latest_read,
+            },
+        }
+    )

@@ -26,4 +26,6 @@ urlpatterns = (
     url(r'^version_logs_list/$', views.version_logs_list, name='version_logs_list'),
     # 获取版本日志详情
     url(r'^version_log_detail/', views.get_version_log_detail, name='version_log_detail'),
+    # 查询当前用户是否看过最新版本日志
+    url(r'^has_user_read_latest/', views.has_user_read_latest, name='has_user_read_latest')
 )
