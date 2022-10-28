@@ -10,7 +10,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-
+import functools
 import re
 import os
 import time
@@ -26,22 +26,26 @@ def get_parsed_html(log_version):
 
     # 根据版本号获取对应md文件
     filenames = [filename for filename in os.listdir(config.MD_FILES_DIR)]
-    md_filename = ''
+    md_filename = ""
     for filename in filenames:
         if log_version in filename:
             md_filename = filename
             break
 
     # 文件不存在
-    if md_filename == '':
+    if md_filename == "":
         return None
 
     md_file_path = os.path.join(config.MD_FILES_DIR, md_filename)
 
-    html_file_path = os.path.join(config.PARSED_HTML_FILES_DIR, '{}.html'.format(log_version))
+    html_file_path = os.path.join(
+        config.PARSED_HTML_FILES_DIR, "{}.html".format(log_version)
+    )
     # 已有解析好的版本
-    if os.path.isfile(html_file_path) and _is_html_file_generated_after_md_file(html_file_path, md_file_path):
-        with open(html_file_path, encoding='utf-8') as f:
+    if os.path.isfile(html_file_path) and _is_html_file_generated_after_md_file(
+        html_file_path, md_file_path
+    ):
+        with open(html_file_path, encoding="utf-8") as f:
             html_text = f.read()
         return html_text
     # 没有解析好的版本
@@ -58,11 +62,15 @@ def get_version_list():
     version_list = []
     for filename in os.listdir(config.MD_FILES_DIR):
         full_name = os.path.splitext(filename)[0]
-        version, _, date_updated = full_name.partition('_')
-        if date_updated == '':
-            date_updated = _get_file_modified_date(os.path.join(config.MD_FILES_DIR, filename))
+        version, _, date_updated = full_name.partition("_")
+        if date_updated == "":
+            date_updated = _get_file_modified_date(
+                os.path.join(config.MD_FILES_DIR, filename)
+            )
         else:
-            date_updated = _transform_datetime_format(date_updated, config.FILE_TIME_FORMAT)
+            date_updated = _transform_datetime_format(
+                date_updated, config.FILE_TIME_FORMAT
+            )
         version_values = _get_version_parsed_list(version)
         version_list.append(((version, date_updated), version_values))
     # 根据版本号按照从新版本到旧版本排序
@@ -89,14 +97,16 @@ def get_latest_version():
 
 def _get_version_parsed_list(version):
     """返回日志版本解析结果"""
-    log_version_pattern = re.compile('(\d+)')  # noqa
+    log_version_pattern = re.compile("(\d+)")  # noqa
     return [int(value) for value in re.findall(log_version_pattern, version)]
 
 
 def _md_parse_to_html_and_save(md_file_path, html_file_path):
     """将存在的md文件解析并保存为html文件"""
     parser = mistune.Markdown(hard_wrap=True)
-    with open(md_file_path, encoding='utf-8') as read_file, open(html_file_path, 'w', encoding='utf-8') as write_file:
+    with open(md_file_path, encoding="utf-8") as read_file, open(
+        html_file_path, "w", encoding="utf-8"
+    ) as write_file:
         md_version_log = read_file.read()
         html_version_log = parser(md_version_log)
         write_file.write(html_version_log)
@@ -111,12 +121,12 @@ def _is_filename_legal(filename):
 def _get_file_modified_date(file_path):
     """返回存在的文件的最后修改日期"""
     timestamp = os.stat(file_path).st_mtime
-    return time.strftime('%Y.%m.%d', time.localtime(timestamp))
+    return time.strftime("%Y.%m.%d", time.localtime(timestamp))
 
 
 def _transform_datetime_format(date_str, format_in_file):
     """转换版本日期格式"""
-    return time.strftime('%Y.%m.%d', time.strptime(date_str, format_in_file))
+    return time.strftime("%Y.%m.%d", time.strptime(date_str, format_in_file))
 
 
 def _is_html_file_generated_after_md_file(html_file_path, md_file_path):
