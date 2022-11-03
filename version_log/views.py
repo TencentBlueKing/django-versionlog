@@ -15,12 +15,12 @@ import logging
 import functools
 
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.utils.translation import ugettext_lazy as _
 
 from version_log import config
 from version_log.models import VersionLogVisited
-from version_log.utils import get_version_list, get_parsed_html
+from version_log.utils import get_version_list, get_parsed_html, get_parsed_markdown_file_path
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +86,19 @@ def version_logs_list(request):
         "message": _("日志列表获取成功"),
         "data": version_list,
     }
+    return JsonResponse(response)
+
+
+@latest_read_record
+def get_markdown_version_log_detail(request):
+    """
+    获取单条版本日志，不转换markdown格式
+    """
+    log_version = request.GET.get("log_version")
+    markdown_file_path = get_parsed_markdown_file_path(log_version)
+    with open(markdown_file_path, 'r', encoding="utf-8") as markdown_handler:
+        markdown_text = markdown_handler.read()
+    response = {"result": True, "code": 0, "message": _("Markdown格式日志详情获取成功"), "data": markdown_text}
     return JsonResponse(response)
 
 
