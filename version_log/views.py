@@ -15,7 +15,7 @@ import logging
 import functools
 
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.utils.translation import ugettext_lazy as _
 
 from version_log import config
