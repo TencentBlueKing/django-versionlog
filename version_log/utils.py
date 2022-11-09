@@ -21,9 +21,10 @@ import mistune
 import version_log.config as config
 
 
-def get_parsed_html(log_version):
-    """获取版本日志对应的html代码"""
-
+def get_parsed_markdown_file_path(log_version):
+    """
+    获取版本日志的文件路径
+    """
     # 根据版本号获取对应md文件
     filenames = [filename for filename in os.listdir(config.MD_FILES_DIR)]
     md_filename = ""
@@ -37,6 +38,12 @@ def get_parsed_html(log_version):
         return None
 
     md_file_path = os.path.join(config.MD_FILES_DIR, md_filename)
+    return md_file_path
+
+
+def get_parsed_html(log_version):
+    """获取版本日志对应的html代码"""
+    md_file_path = get_parsed_markdown_file_path(log_version)
 
     html_file_path = os.path.join(
         config.PARSED_HTML_FILES_DIR, "{}.html".format(log_version)
