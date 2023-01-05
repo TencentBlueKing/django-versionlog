@@ -13,6 +13,7 @@ django-versionlog是为网站开发者提供版本日志快速接入的功能模
 - [最新特性](docs/feature.md)
 - [代码目录](docs/structure.md)
 - [进阶使用](docs/usage.md)
+- [前端接入](docs/versionLog.md)
 
 ## Quick Start
 
