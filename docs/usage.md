@@ -10,7 +10,9 @@
 # 默认设置
 VERSION_LOG = {
     'MD_FILES_DIR': 'version_logs_md',
-    'NAME_PATTERN': '[vV](\d+\.){2,4}md',
+    'LANGUAGE_POSTFIX_SEPARATION': "_",
+    'LANGUAGE_MAPPINGS': {},
+    'NAME_PATTERN': '[vV](\d+\.){2,4}md',  # noqa
     'FILE_TIME_FORMAT': '%Y%m%d',
     'LATEST_VERSION_INFORM': False,
     'LATEST_VERSION_INFORM_TYPE': 'redirect',
@@ -22,6 +24,12 @@ VERSION_LOG = {
 ```
 
 - MD_FILES_DIR：版本日志md文件夹，默认情况下会在第一次项目启动时创建version_logs_md文件夹，也可自己创建并把版本日志文件添加进去。如需自定义，请修改文件夹名称并确保自定义文件夹已创建。
+
+- LANGUAGE_POSTFIX_SEPARATION: 多语言版本日志md文件夹后缀分隔符，默认为`_`，如`version_logs_md_en`等。
+
+- LANGUAGE_MAPPINGS：django request 中 LANGUAGE_CODE 和多语言版本日志md文件夹后缀的映射关系，如`{'en': 'en'}`等。
+    
+      __注意__：多语言版本日志目录只是记录默认语言之外的版本日志的目录，当计算当前最新版本时仍会以 MD_FILES_DIR 目录为准。
 
 - NAME_PATTERN：版本日志文件命名匹配规则，需是正则表达式。（1.3.0 版本之后不做强制校验）
 

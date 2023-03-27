@@ -20,7 +20,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from version_log import config
 from version_log.models import VersionLogVisited
-from version_log.utils import get_version_list, get_parsed_html, get_parsed_markdown_file_path
+from version_log.utils import get_version_list, get_parsed_html, get_parsed_markdown_file_path, \
+    get_md_files_dir_with_language_code
 
 logger = logging.getLogger(__name__)
 
@@ -72,10 +73,12 @@ def version_logs_block(request):
 
 def version_logs_list(request):
     """获取版本日志列表"""
-    version_list = get_version_list()
+    language_code = getattr(request, "LANGUAGE_CODE", None)
+    version_list = get_version_list(language_code)
     if version_list is None:
+        md_files_dir = get_md_files_dir_with_language_code(language_code)
         logger.error(
-            "MD_FILES_DIR not found. Current path is {}".format(config.MD_FILES_DIR)
+            "MD_FILES_DIR not found. Current path is {}".format(md_files_dir)
         )
         return JsonResponse(
             {"result": False, "code": -1, "message": _("访问出错，请联系管理员。"), "data": None}
@@ -94,8 +97,9 @@ def get_markdown_version_log_detail(request):
     """
     获取单条版本日志，不转换markdown格式
     """
+    language_code = getattr(request, "LANGUAGE_CODE", None)
     log_version = request.GET.get("log_version")
-    markdown_file_path = get_parsed_markdown_file_path(log_version)
+    markdown_file_path = get_parsed_markdown_file_path(log_version, language_code)
     with open(markdown_file_path, 'r', encoding="utf-8") as markdown_handler:
         markdown_text = markdown_handler.read()
     response = {"result": True, "code": 0, "message": _("Markdown格式日志详情获取成功"), "data": markdown_text}
@@ -105,8 +109,9 @@ def get_markdown_version_log_detail(request):
 @latest_read_record
 def get_version_log_detail(request):
     """获取单条版本日志转换结果"""
+    language_code = request.LANGUAGE_CODE
     log_version = request.GET.get("log_version")
-    html_text = get_parsed_html(log_version)
+    html_text = get_parsed_html(log_version, language_code)
     if html_text is None:
         logger.error(
             "md file not found or log version not valid. Log version is {}".format(
