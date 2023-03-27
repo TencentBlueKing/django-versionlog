@@ -2,7 +2,7 @@
 
 ![](docs/img/icons/django-versionlog.png)
 
-[![license](https://img.shields.io/badge/license-mit-brightgreen.svg?style=flat)](https://github.com/TencentBlueKing/django-versionlog/blob/master/LICENSE) [![Release Version](https://img.shields.io/badge/release-1.5.0-brightgreen.svg)](https://github.com/TencentBlueKing/django-versionlog/releases) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/django-versionlog/pulls) 
+[![license](https://img.shields.io/badge/license-mit-brightgreen.svg?style=flat)](https://github.com/TencentBlueKing/django-versionlog/blob/master/LICENSE) [![Release Version](https://img.shields.io/badge/release-1.6.0-brightgreen.svg)](https://github.com/TencentBlueKing/django-versionlog/releases) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TencentBlueKing/django-versionlog/pulls) 
 
 > **重要提示**: `master` 分支是开发分支，可能处于 *不稳定或者不可用状态* 。请通过[releases](https://github.com/TencentBlueKing/django-versionlog/releases) 而非 `master` 去获取稳定的软件包
 
