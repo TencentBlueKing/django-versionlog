@@ -109,7 +109,7 @@ def get_markdown_version_log_detail(request):
 @latest_read_record
 def get_version_log_detail(request):
     """获取单条版本日志转换结果"""
-    language_code = request.LANGUAGE_CODE
+    language_code = getattr(request, "LANGUAGE_CODE", None)
     log_version = request.GET.get("log_version")
     html_text = get_parsed_html(log_version, language_code)
     if html_text is None:
