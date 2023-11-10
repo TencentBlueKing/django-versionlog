@@ -92,6 +92,52 @@ def version_logs_list(request):
     return JsonResponse(response)
 
 
+def handle_version_content(version: str, log_format: str, language_code) -> str:
+    """处理内容"""
+    if log_format == "html":
+        html_text = get_parsed_html(version, language_code) or ""
+        return html_text
+    elif log_format == "md":
+        markdown_file_path = get_parsed_markdown_file_path(version, language_code)
+        with open(markdown_file_path, "r", encoding="utf-8") as markdown_handler:
+            return markdown_handler.read()
+    else:
+        return ''
+
+
+@latest_read_record
+def version_logs_list_with_detail(request):
+    """获取包含详情的日志列表"""
+    language_code = getattr(request, "LANGUAGE_CODE", None)
+    log_format = request.GET.get("log_format", "md")
+
+    version_list = []
+    try:
+        for data_list in get_version_list(language_code):
+            version = data_list[0]
+            version_list.append({
+                "version": version,
+                "time": data_list[1],
+                "content": handle_version_content(version, log_format, language_code)
+            })
+    except:
+        md_files_dir = get_md_files_dir_with_language_code(language_code)
+        logger.error(
+            "MD_FILES_DIR not found. Current path is {}".format(md_files_dir)
+        )
+        return JsonResponse(
+            {"result": False, "code": -1, "message": _("访问出错，请联系管理员。"), "data": None}
+        )
+
+    response = {
+        "result": True,
+        "code": 0,
+        "message": _("日志详情列表获取成功"),
+        "data": version_list,
+    }
+    return JsonResponse(response)
+
+
 @latest_read_record
 def get_markdown_version_log_detail(request):
     """

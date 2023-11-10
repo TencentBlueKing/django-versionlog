@@ -28,5 +28,8 @@ urlpatterns = (
     url(r'^version_log_detail/', views.get_version_log_detail, name='version_log_detail'),
     url(r'^markdown_version_log_detail/', views.get_markdown_version_log_detail, name='markdown_version_log_detail'),
     # 查询当前用户是否看过最新版本日志
-    url(r'^has_user_read_latest/', views.has_user_read_latest, name='has_user_read_latest')
+    url(r'^has_user_read_latest/', views.has_user_read_latest, name='has_user_read_latest'),
+
+    # 获取版本日志和详情列表
+    url(r"^version_logs_list_with_detail/$", views.version_logs_list_with_detail, name="version_logs_list_with_detail")
 )
