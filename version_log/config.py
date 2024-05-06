@@ -15,7 +15,7 @@ import re
 import os
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 __all__ = ('MD_FILES_DIR', 'PARSED_HTML_FILES_DIR', 'NAME_PATTERN',

@@ -16,7 +16,7 @@ import functools
 
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from version_log import config
 from version_log.models import VersionLogVisited

@@ -11,7 +11,7 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 """
 
-from django.conf.urls import url
+from django.urls import re_path
 
 from version_log import views
 
@@ -19,17 +19,17 @@ app_name = "version_log"
 
 urlpatterns = (
     # 版本日志单页面
-    url(r'^$', views.version_logs_page, name='version_log_page'),
+    re_path(r'^$', views.version_logs_page, name='version_log_page'),
     # 获取版本日志块页面（用于对话框场景）
-    url(r'^block/$', views.version_logs_block, name='block'),
+    re_path(r'^block/$', views.version_logs_block, name='block'),
     # 获取版本日志列表
-    url(r'^version_logs_list/$', views.version_logs_list, name='version_logs_list'),
+    re_path(r'^version_logs_list/$', views.version_logs_list, name='version_logs_list'),
     # 获取版本日志详情
-    url(r'^version_log_detail/', views.get_version_log_detail, name='version_log_detail'),
-    url(r'^markdown_version_log_detail/', views.get_markdown_version_log_detail, name='markdown_version_log_detail'),
+    re_path(r'^version_log_detail/', views.get_version_log_detail, name='version_log_detail'),
+    re_path(r'^markdown_version_log_detail/', views.get_markdown_version_log_detail, name='markdown_version_log_detail'),
     # 查询当前用户是否看过最新版本日志
-    url(r'^has_user_read_latest/', views.has_user_read_latest, name='has_user_read_latest'),
+    re_path(r'^has_user_read_latest/', views.has_user_read_latest, name='has_user_read_latest'),
 
     # 获取版本日志和详情列表
-    url(r"^version_logs_list_with_detail/$", views.version_logs_list_with_detail, name="version_logs_list_with_detail")
+    re_path(r"^version_logs_list_with_detail/$", views.version_logs_list_with_detail, name="version_logs_list_with_detail")
 )
